@@ -107,7 +107,7 @@ def send_money():
     )
     
     # Let's mock the initial status based on the exact amount rules
-    if amount % 5 == 0 and amount != 0:
+    if (amount % 5 == 0 or amount % 2 == 0) and amount != 0:
         new_txn.status = 'PENDING'
     else:
         new_txn.status = 'SUCCESS'
