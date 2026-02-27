@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.clear();
         window.location.href = '/';
     });
+
+    document.getElementById('txnIdInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            checkTransactionStatus();
+        }
+    });
 });
 
 function updateBalanceDisplay(bal) {
