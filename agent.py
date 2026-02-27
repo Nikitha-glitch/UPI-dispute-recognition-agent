@@ -48,16 +48,16 @@ class UPIDisputeAgent:
             # Multiples of 5 (odd: 5, 15...): Refund Initiated
             if bank_info['debited']:
                 # Money debited but not received by merchant
-                refund_resp = self.bank_api.initiate_refund(self.transaction_id, txn.amount)
+                self.bank_api.initiate_refund(self.transaction_id, txn.amount)
                 final_txn_status = 'REFUND_INITIATED'
-                dispute_status = f"Refund Initiated. Money debited from account. Reference: {refund_resp['refund_id']}"
+                dispute_status = 'Refund Initiated. Money debited from your account.'
                 
                 # Refund money back to user mock balance
                 if txn.user and txn.status != 'REFUND_INITIATED': 
                     txn.user.balance += txn.amount
             else:
                 final_txn_status = 'REFUND_INITIATED'
-                dispute_status = 'Refund Initiated. Money debited from account.'
+                dispute_status = 'Refund Initiated. Money debited from your account.'
 
         elif bank_info['debited'] and not merchant_info['received']:
             # Fallback for non-multiples of 5 if such a case exists
