@@ -39,13 +39,8 @@ class UPIDisputeAgent:
             final_txn_status = 'SUCCESS'
             dispute_status = 'Transaction Successful. Merchant Received Funds.'
             
-        elif txn.amount % 2 == 0 and txn.amount != 0:
-            # Multiples of 2: Dispute Resolved (No Debit)
-            final_txn_status = 'DISPUTE_RESOLVED'
-            dispute_status = 'Dispute Resolved. Money is not credited nor debited from account.'
-
         elif txn.amount % 5 == 0 and txn.amount != 0:
-            # Multiples of 5 (odd: 5, 15...): Refund Initiated
+            # Multiples of 5: Refund Initiated (Takes priority over multiples of 2)
             if bank_info['debited']:
                 # Money debited but not received by merchant
                 self.bank_api.initiate_refund(self.transaction_id, txn.amount)
@@ -58,6 +53,11 @@ class UPIDisputeAgent:
             else:
                 final_txn_status = 'REFUND_INITIATED'
                 dispute_status = 'Refund Initiated. Money debited from your account.'
+
+        elif txn.amount % 2 == 0 and txn.amount != 0:
+            # Multiples of 2: Dispute Resolved (No Debit)
+            final_txn_status = 'DISPUTE_RESOLVED'
+            dispute_status = 'Dispute Resolved. Money is not credited nor debited from account.'
 
         elif bank_info['debited'] and not merchant_info['received']:
             # Fallback for non-multiples of 5 if such a case exists
