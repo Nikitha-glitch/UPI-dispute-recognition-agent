@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Navbar -->
+    <nav class="glass-nav">
+        <div class="nav-brand">UPI<span>Resolve</span></div>
+        <div class="user-info">
+            <span id="welcomeText">Welcome, User</span>
+            <button id="logoutBtn" class="btn outline-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+
+        <!-- Left Sidebar / Main Actions -->
+        <aside class="actions-panel glassmorphism">
+            <div class="balance-card">
+                <h3>Available Balance</h3>
+                <div class="balance-display-container">
+                    <h1 id="userBalance">********</h1>
+                    <span class="balance-toggle" onclick="toggleBalanceVisibility()" title="Toggle Balance">
+                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <line id="eyeSlash" x1="1" y1="1" x2="23" y2="23" style="display: block;"></line>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <button class="action-btn" onclick="openModal('sendMoneyModal')">
+                    <div class="icon-wrap">💸</div>
+                    <span>Send Money</span>
+                </button>
+                <button class="action-btn" onclick="alert('Scan functionality simulated.')">
+                    <div class="icon-wrap">📷</div>
+                    <span>Scan & Pay</span>
+                </button>
+                <button class="action-btn" onclick="fetchHistory()">
+                    <div class="icon-wrap">📜</div>
+                    <span>View History</span>
+                </button>
+                <button class="action-btn" onclick="alert('Connecting to Helpline Support...')">
+                    <div class="icon-wrap">🎧</div>
+                    <span>Helpline Support</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Right Main Panel -->
+        <main class="main-panel glassmorphism">
+            <h2>Transaction Status & Resolution</h2>
+            <p class="subtitle">Enter your transaction ID to check status or file a dispute</p>
+
+            <div class="resolution-form">
+                <input type="text" id="txnIdInput" placeholder="Enter Transaction ID (e.g. e2a12...)">
+                <button class="btn primary-btn" onclick="checkTransactionStatus()">Check Status</button>
+            </div>
+            <div id="resolutionResult"></div>
+
+            <hr class="divider">
+
+            <h2>Dispute History</h2>
+            <div class="table-container">
+                <table id="disputeTable">
+                    <thead>
+                        <tr>
+                            <th>Merchant Txn ID</th>
+                            <th>Receiver Txn ID</th>
+                            <th>Amount</th>
+                            <th>Dispute Status</th>
+                            <th>Resolved At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Transaction History Modal inside right panel for simplicity in demo or hidden -->
+            <div id="txnHistorySection" style="display:none; margin-top:20px;">
+                <h2>Recent Transactions</h2>
+                <ul id="txnList" class="txn-list"></ul>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Modals -->
+    <div id="sendMoneyModal" class="modal-overlay">
+        <div class="modal-content glassmorphism">
+            <h3>Send Money</h3>
+            <div class="input-group">
+                <label>Receiver UPI / ID (Use 'fail' to test failure)</label>
+                <input type="text" id="sendReceiver" placeholder="receiver@upi">
+            </div>
+            <div class="input-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="sendAmount" placeholder="0.00">
+            </div>
+            <div class="modal-actions">
+                <button class="btn primary-btn" onclick="sendMoney()">Send</button>
+                <button class="btn outline-btn" onclick="closeModal('sendMoneyModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+
+</html>
