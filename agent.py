@@ -39,16 +39,30 @@ class UPIDisputeAgent:
             final_txn_status = 'SUCCESS'
             dispute_status = 'Transaction Successful. Merchant Received Funds.'
             
+        elif txn.amount % 5 == 0 and txn.amount != 0:
+            # Multiples of 5: User wants "Refund Initiated" and "Money debited"
+            if bank_info['debited']:
+                # Money debited but not received by merchant
+                refund_resp = self.bank_api.initiate_refund(self.transaction_id, txn.amount)
+                final_txn_status = 'REFUND_INITIATED'
+                dispute_status = f"Refund Initiated. Money debited from account. Reference: {refund_resp['refund_id']}"
+                
+                # Refund money back to user mock balance
+                if txn.user and txn.status != 'REFUND_INITIATED': 
+                    txn.user.balance += txn.amount
+            else:
+                # Fallback if somehow not debited
+                final_txn_status = 'REFUND_INITIATED'
+                dispute_status = 'Refund Initiated. Money debited from account.'
+
         elif bank_info['debited'] and not merchant_info['received']:
-            # Auto Refund triggered because money debited but merchant didn't get it
+            # Fallback for non-multiples of 5 if such a case exists
             refund_resp = self.bank_api.initiate_refund(self.transaction_id, txn.amount)
             final_txn_status = 'REFUND_CREDITED'
             dispute_status = f"Refund Credited. Reference: {refund_resp['refund_id']}"
-            
-            # Refund money back to user mock balance
-            if txn.user and txn.status != 'REFUND_CREDITED': # Prevent double refunding
+            if txn.user and txn.status != 'REFUND_CREDITED':
                 txn.user.balance += txn.amount
-                
+            
         elif not bank_info['debited'] and not merchant_info['received']:
             # Money wasn't debited and merchant didn't receive it
             final_txn_status = 'FAILED'

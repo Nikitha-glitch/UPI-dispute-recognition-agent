@@ -6,11 +6,11 @@ class MockBankAPI:
     def get_transaction_status(txn_id, amount=0, receiver_id=""):
         # Mocks a bank status check based on the transaction amount
         if amount % 10 == 5:
-            # Multiples of 5 ending in 5: Money debited, not credited to merchant yet
+            # Multiples of 10-5 (5, 15, 25...): Money debited, not credited to merchant yet
             return {"debited": True, "credited": False, "status": "PENDING_CREDIT"}
         elif amount % 10 == 0 and amount != 0:
-            # Multiples of 5 ending in 0 (e.g. 10, 20): Money was NEVER debited
-            return {"debited": False, "credited": False, "status": "FAILED"}
+            # Multiples of 10 (10, 20...): Report as debited as per user request for demo
+            return {"debited": True, "credited": False, "status": "PENDING_CREDIT"}
         else:
             # Any other amount: Success
             return {"debited": True, "credited": True, "status": "SUCCESS"}

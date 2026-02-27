@@ -362,6 +362,11 @@ tr:last-child td {
     color: #fbbf24;
 }
 
+.status-refund_initiated {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
 /* Modals */
 .modal-overlay {
     position: fixed;
