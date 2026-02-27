@@ -16,7 +16,7 @@ class UPIDisputeAgent:
         if txn.status == 'SUCCESS':
             return {
                 "transaction_status": "SUCCESS",
-                "dispute_status": "Transaction is already successful.",
+                "dispute_status": "Transaction Successful. Money credited to receiver.",
                 "merchant_txn_id": f"MERCH-{self.transaction_id}",
                 "receiver_txn_id": f"BANK-{self.transaction_id}",
                 "bank_info": {"debited": True, "credited": True},
